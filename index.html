@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Notcoin Clone (Firebase & Persistence)</title>
+    <title>Notcoin Clone (Fixed)</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
@@ -42,102 +42,50 @@
             background: radial-gradient(circle at center, #ff00cc 0%, #33001b 40%, #000000 90%);
         }
 
-        /* --- START SCREEN OVERLAY --- */
+        /* --- START SCREEN --- */
         #start-screen {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: #000;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 9999; display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
         }
-        
         .start-btn {
-            background: var(--gold);
-            color: #000;
-            font-size: 32px;
-            font-weight: 900;
-            padding: 20px 60px;
-            border-radius: 20px;
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 0 30px var(--gold);
-            animation: pulse 2s infinite;
+            background: var(--gold); color: #000; font-size: 32px; font-weight: 900;
+            padding: 20px 60px; border-radius: 20px; border: none; cursor: pointer;
+            box-shadow: 0 0 30px var(--gold); animation: pulse 2s infinite;
         }
-        
         @keyframes pulse {
             0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(243, 186, 47, 0.7); }
             70% { transform: scale(1.05); box-shadow: 0 0 0 20px rgba(243, 186, 47, 0); }
             100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(243, 186, 47, 0); }
         }
 
-        /* --- View Management --- */
+        /* --- VIEW MANAGEMENT --- */
         .view {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 1;
-            overflow-y: auto;
-            padding-bottom: 140px; 
-            transition: opacity 0.3s ease, transform 0.3s;
-            pointer-events: none;
-            opacity: 0;
-            transform: scale(0.95);
+            width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center;
+            position: absolute; top: 0; left: 0; z-index: 1; overflow-y: auto;
+            padding-bottom: 140px; transition: opacity 0.3s ease, transform 0.3s;
+            pointer-events: none; opacity: 0; transform: scale(0.95);
         }
+        .view.active { opacity: 1; transform: scale(1); pointer-events: auto; z-index: 10; }
 
-        .view.active {
-            opacity: 1;
-            transform: scale(1);
-            pointer-events: auto;
-            z-index: 10;
-        }
-
-        /* --- Header --- */
+        /* --- HEADER --- */
         .header {
-            width: 100%;
-            padding-top: 30px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            z-index: 20;
-            min-height: 80px;
+            width: 100%; padding-top: 30px; display: flex; justify-content: center;
+            align-items: center; position: relative; z-index: 20; min-height: 80px;
         }
-
         .join-squad {
-            background: rgba(0, 0, 0, 0.4);
-            padding: 12px 25px;
-            border-radius: 30px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 16px;
-            font-weight: 700;
-            backdrop-filter: blur(10px);
-            cursor: pointer;
-            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(0, 0, 0, 0.4); padding: 12px 25px; border-radius: 30px;
+            display: flex; align-items: center; gap: 10px; font-size: 16px; font-weight: 700;
+            backdrop-filter: blur(10px); cursor: pointer; border: 1px solid rgba(255,255,255,0.2);
         }
         .join-squad:active { transform: scale(0.95); }
-
         .my-squad-display {
-            display: none;
-            align-items: center;
-            gap: 10px;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 8px 20px;
-            border-radius: 30px;
-            border: 1px solid #f3ba2f;
+            display: none; align-items: center; gap: 10px; background: rgba(0, 0, 0, 0.5);
+            padding: 8px 20px; border-radius: 30px; border: 1px solid #f3ba2f;
         }
         .squad-mini-img { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; border: 1px solid #fff; }
 
-        /* --- Score Board --- */
+        /* --- SCORE & COIN --- */
         .score-board { margin-top: 10px; text-align: center; z-index: 10; }
         .score-display { display: flex; align-items: center; justify-content: center; gap: 10px; }
         .small-logo { width: 45px; height: 45px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
@@ -148,8 +96,6 @@
             align-items: center; justify-content: center; gap: 8px; cursor: pointer;
             border: 1px solid rgba(255,255,255,0.2); margin-top: 5px;
         }
-
-        /* --- Main Coin Section --- */
         .coin-section {
             flex: 1; display: flex; justify-content: center; align-items: center; width: 100%;
             position: relative; z-index: 15; min-height: 300px;
@@ -165,7 +111,6 @@
             width: 100%; height: 100%; object-fit: contain; pointer-events: none;
             filter: drop-shadow(0 15px 30px rgba(0,0,0,0.5));
         }
-
         .float-text {
             position: absolute; color: #fff; font-size: 40px; font-weight: 800; pointer-events: none;
             animation: floatUp 0.8s ease-out forwards; text-shadow: 0 2px 4px rgba(0,0,0,0.3); z-index: 100;
@@ -175,22 +120,14 @@
             100% { transform: translateY(-100px) scale(1.2); opacity: 0; }
         }
 
-        /* --- FIXED FOOTER CONTROLS --- */
+        /* --- CONTROLS --- */
         .controls {
-            position: fixed;
-            bottom: 20px;
-            left: 0;
-            width: 100%;
-            display: flex; 
-            justify-content: space-between; 
-            align-items: flex-end;
-            padding: 0 20px; 
-            z-index: 50;
+            position: fixed; bottom: 20px; left: 0; width: 100%; display: flex;
+            justify-content: space-between; align-items: flex-end; padding: 0 20px; z-index: 50;
         }
         .energy-val { font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 5px; }
         .energy-icon { font-size: 24px; }
         .energy-max { font-size: 12px; color: rgba(255, 255, 255, 0.8); margin-left: 28px; }
-
         .menu-items { display: flex; gap: 8px; }
         .menu-btn {
             background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(10px); border-radius: 14px;
@@ -199,20 +136,16 @@
             border: 1px solid rgba(255,255,255,0.1); transition: background 0.2s;
         }
         .menu-btn:active { background: rgba(255, 255, 255, 0.2); }
-
         .progress-container {
-            position: fixed;
-            bottom: 100px;
-            left: 5%;
-            width: 90%; height: 10px; background: rgba(0,0,0,0.3); border-radius: 5px;
-            overflow: hidden; z-index: 10;
+            position: fixed; bottom: 100px; left: 5%; width: 90%; height: 10px;
+            background: rgba(0,0,0,0.3); border-radius: 5px; overflow: hidden; z-index: 10;
         }
         .progress-bar {
             height: 100%; width: 0%; background: linear-gradient(90deg, #f3ba2f, #ffd700);
             transition: width 0.3s ease;
         }
 
-        /* --- SUB-PAGES --- */
+        /* --- SQUAD & PAGES --- */
         .sub-page-header { width: 100%; padding: 20px; display: flex; align-items: center; justify-content: center; position: relative; }
         .back-btn {
             position: absolute; left: 20px; width: 40px; height: 40px;
@@ -238,7 +171,6 @@
         .file-upload-wrapper { position: relative; margin-bottom: 25px; text-align: left; }
         .custom-file-input { width: 100%; padding: 10px; background: #2c2c2e; border-radius: 10px; border: 1px solid #444; color: #fff; }
         .create-btn { background: linear-gradient(90deg, #f3ba2f, #e67e22); color: black; font-weight: 800; width: 100%; padding: 16px; border: none; border-radius: 12px; font-size: 18px; cursor: pointer; }
-        .create-btn:disabled { background: #555; color: #888; cursor: not-allowed; }
         
         .league-slider-container { width: 100%; height: 40vh; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; margin-top: 50px;}
         .slider-arrow { position: absolute; font-size: 40px; padding: 20px; cursor: pointer; z-index: 30; background: rgba(0,0,0,0.2); border-radius: 50%; }
@@ -320,19 +252,31 @@
             <div style="font-size: 50px;">🧸</div>
             <h3>Invite Friends</h3>
             <p style="color: #aaa; font-size: 14px; margin-bottom: 20px;">Earn bonuses for each friend</p>
-            
             <div style="background:#1c1c1e; padding:15px; border-radius:12px; border:1px solid #333; width:90%; margin:0 auto; margin-bottom:20px;">
                 <div style="font-size:12px; color:#aaa; margin-bottom:5px;">Your Invite Link</div>
                 <div style="color:var(--gold); font-weight:bold; overflow:hidden; text-overflow:ellipsis;" id="ref-link-display">Loading...</div>
                 <button class="create-btn" style="margin-top:10px; padding:10px;" onclick="window.copyRefLink()">Copy Link</button>
             </div>
         </div>
-        
         <div class="list-container">
              <div class="list-item">
                 <div class="item-icon">👤</div>
                 <div class="item-info"><span class="item-title">Total Referrals</span></div>
                 <span style="color:#f3ba2f" id="ref-count-display">0</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="view-squad" class="view">
+        <div class="back-btn" style="top:20px; left:20px;" onclick="window.switchView('view-home')">←</div>
+        <div class="squad-container">
+            <h2 style="font-size: 28px; margin-bottom: 20px;">Create Squad</h2>
+            <div class="squad-card">
+                <div style="font-size: 50px; margin-bottom: 10px;">🛡️</div>
+                <span style="color: #f3ba2f; font-weight: bold; display:block; margin-bottom: 20px;">Requirement: 0 Referrals (Promo)</span>
+                <input type="text" id="squad-name-input" class="custom-input" placeholder="Ex: Titans">
+                <div class="file-upload-wrapper"><input type="file" id="squad-file-input" class="custom-file-input" accept="image/*"></div>
+                <button class="create-btn" onclick="window.attemptCreateSquad()">Create Squad</button>
             </div>
         </div>
     </div>
@@ -369,27 +313,12 @@
                 <div style="background:#333; color:#f3ba2f; padding:2px 8px; border-radius:4px; font-size:12px; margin:5px 0;" id="rocket-limit-text">3/3 Left</div>
                 <button id="rocket-btn" class="create-btn" onclick="window.activateRocket()" style="margin-top:10px">Get Free</button>
             </div>
-
              <div class="list-item" style="background:#1c1c1e; flex-direction:column; align-items:center; text-align:center; border-color:#ff00cc;">
                 <div style="font-size:50px">⚡</div>
                 <h3>Multitap 2x</h3>
                 <p style="color:#aaa; font-size:13px;">Double Taps for 10s</p>
                 <div style="background:#333; color:#ff00cc; padding:2px 8px; border-radius:4px; font-size:12px; margin:5px 0;" id="multi-limit-text">10/10 Left</div>
                 <button id="multi-btn" class="create-btn" onclick="window.activateMultitap()" style="margin-top:10px; background:linear-gradient(90deg, #ff00cc, #33001b);">Get Free</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="view-squad" class="view">
-        <div class="back-btn" style="top:20px; left:20px;" onclick="window.switchView('view-home')">←</div>
-        <div class="squad-container">
-            <h2 style="font-size: 28px; margin-bottom: 20px;">Create Squad</h2>
-            <div class="squad-card">
-                <div style="font-size: 50px; margin-bottom: 10px;">🛡️</div>
-                <span style="color: #f3ba2f; font-weight: bold; display:block; margin-bottom: 20px;">Requirement: 0 Referrals (Promo)</span>
-                <input type="text" id="squad-name-input" class="custom-input" placeholder="Ex: Titans">
-                <div class="file-upload-wrapper"><input type="file" id="squad-file-input" class="custom-file-input" accept="image/*"></div>
-                <button class="create-btn" onclick="window.attemptCreateSquad()">Create Squad</button>
             </div>
         </div>
     </div>
@@ -409,7 +338,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, doc, setDoc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAThgf1aSFQVa9llIGRdUOGD6aF5wLgl1w",
@@ -435,8 +364,14 @@
         let multitapMultiplier = 2;
         window.rocketLeft = 3;
         window.multitapLeft = 10;
-        window.myReferrals = 0; // Default
-        let userId = "guest_" + Math.floor(Math.random() * 100000);
+        window.myReferrals = 0;
+        
+        // PERSISTENT USER ID LOGIC
+        let userId = localStorage.getItem('tg_user_id');
+        if(!userId) {
+            userId = "guest_" + Date.now();
+            localStorage.setItem('tg_user_id', userId);
+        }
         let gameStarted = false;
 
         const leagues = [
@@ -448,40 +383,37 @@
         ];
 
         // --- INITIALIZATION ---
-        // Determine User ID from Telegram if available
         if (window.Telegram && window.Telegram.WebApp) {
             window.Telegram.WebApp.ready();
             window.Telegram.WebApp.expand();
             const tgUser = window.Telegram.WebApp.initDataUnsafe?.user;
             if (tgUser) {
+                // If real TG user, use their ID
                 userId = tgUser.id.toString();
+                localStorage.setItem('tg_user_id', userId);
             }
         }
 
         // --- CORE FUNCTIONS ---
-
         window.startGame = async function() {
             document.getElementById('start-screen').style.display = 'none';
             document.getElementById('view-home').classList.add('active');
             
-            // Generate Referral Link
-            const botUsername = "YOUR_BOT_USERNAME"; // Replace with real bot username
+            const botUsername = "NotcoinCloneBot"; 
             const refLink = `https://t.me/${botUsername}?start=ref_${userId}`;
             document.getElementById('ref-link-display').innerText = refLink;
 
-            // Load Data from Firebase
             await loadUserData();
             
             gameStarted = true;
             updateUI();
             initSlider();
             
-            // Start Auto-Save Loop (Every 5 seconds)
+            // Auto Save Loop
             setInterval(saveProgress, 5000);
         }
 
         // --- FIREBASE LOGIC ---
-
         async function loadUserData() {
             try {
                 const docRef = doc(db, "users", userId);
@@ -495,25 +427,17 @@
                     window.multitapLeft = data.multitapLeft !== undefined ? data.multitapLeft : 10;
                     window.myReferrals = data.referrals || 0;
                     
-                    // Check Squad
-                    if(data.squad) {
+                    if(data.squad && data.squad.name) {
                          document.getElementById('join-squad-btn').style.display = 'none';
                          document.getElementById('my-squad-ui').style.display = 'flex';
-                         // Note: Saving images to Firestore base64 is heavy, ideally use Storage. 
-                         // For now, if image string is too long, it might be truncated or slow.
                          if(data.squad.img) document.getElementById('home-squad-img').src = data.squad.img;
                          document.getElementById('home-squad-name').innerText = data.squad.name;
                     }
-                    
-                    console.log("Data loaded for user:", userId);
                 } else {
-                    // New User -> Create Doc
-                    await saveUserToFirebase(true); // True for initial creation
+                    await saveUserToFirebase(true);
                 }
             } catch (e) {
-                console.error("Error loading data:", e);
-                // Fallback to creating if error (e.g., offline first time)
-                await saveUserToFirebase(true);
+                console.error("Load error:", e);
             }
         }
 
@@ -539,10 +463,7 @@
                 }
 
                 await setDoc(doc(db, "users", userId), userData, { merge: true });
-                console.log("User synced to Firebase");
-            } catch (e) {
-                console.error("Error saving user:", e);
-            }
+            } catch (e) { console.error(e); }
         }
 
         async function saveProgress() {
@@ -555,14 +476,10 @@
                     multitapLeft: window.multitapLeft,
                     last_active: new Date().toISOString()
                 });
-                console.log("Progress Auto-Saved");
-            } catch (e) {
-                console.warn("Save failed (network?):", e);
-            }
+            } catch (e) {}
         }
 
-        // --- GAMEPLAY FUNCTIONS ---
-
+        // --- GAMEPLAY ---
         window.handleTap = function(e) {
             e.preventDefault();
             if (window.energy >= baseTapValue || isRocketActive) {
@@ -590,7 +507,7 @@
             const el = document.createElement('div');
             el.className = 'float-text';
             el.innerText = '+' + amount;
-            if(isRocketActive) { el.style.color = '#00d2ff'; el.style.fontSize = '50px'; }
+            if(isRocketActive) el.style.color = '#00d2ff';
             else if(isMultitapActive) el.style.color = '#ff00cc';
             el.style.left = x + 'px'; el.style.top = y + 'px';
             document.body.appendChild(el);
@@ -611,16 +528,11 @@
             document.getElementById('level-progress').style.width = Math.min(percent, 100) + "%";
         }
 
-        window.copyRefLink = function() {
-            const link = document.getElementById('ref-link-display').innerText;
-            navigator.clipboard.writeText(link).then(() => showToast("Link Copied!"));
-        }
-
         window.activateRocket = function() {
             if(isRocketActive || window.rocketLeft <= 0) return;
             window.rocketLeft--;
             updateUI();
-            saveProgress(); // Save immediate use
+            saveProgress();
             window.switchView('view-home');
             isRocketActive = true;
             document.body.classList.add('rocket-mode');
@@ -653,31 +565,33 @@
             }, 1500);
         }
 
+        // --- SQUAD CREATION FIX ---
         window.attemptCreateSquad = function() {
             const name = document.getElementById('squad-name-input').value;
             const file = document.getElementById('squad-file-input').files[0];
-            
-            // UPDATED: Requirement 0
-            if(window.myReferrals < 0) return showToast("❌ Need Referrals!"); 
             
             if(!name) return showToast("⚠️ Enter Name");
             if(!file) return showToast("⚠️ Upload Logo");
 
             const reader = new FileReader();
             reader.onload = async function(e) {
-                const squadData = { name: name, img: e.target.result };
-                
-                // Save to Firebase
-                await updateDoc(doc(db, "users", userId), { squad: squadData });
-                
-                // Update UI
-                document.getElementById('join-squad-btn').style.display = 'none';
-                document.getElementById('my-squad-ui').style.display = 'flex';
-                document.getElementById('home-squad-img').src = squadData.img;
-                document.getElementById('home-squad-name').innerText = squadData.name;
-                
-                showToast("✅ Squad Created!");
-                window.switchView('view-home');
+                try {
+                    const squadData = { name: name, img: e.target.result };
+                    // Save to Firebase
+                    await updateDoc(doc(db, "users", userId), { squad: squadData });
+                    
+                    // Update UI
+                    document.getElementById('join-squad-btn').style.display = 'none';
+                    document.getElementById('my-squad-ui').style.display = 'flex';
+                    document.getElementById('home-squad-img').src = squadData.img;
+                    document.getElementById('home-squad-name').innerText = squadData.name;
+                    
+                    showToast("✅ Squad Created!");
+                    window.switchView('view-home');
+                } catch(err) {
+                    console.error(err);
+                    showToast("❌ Image too large or Error!");
+                }
             };
             reader.readAsDataURL(file);
         }
@@ -687,7 +601,12 @@
             setTimeout(() => document.getElementById(id).classList.add('active'), 50);
         }
 
-        // --- Slider & UI Helpers ---
+        window.copyRefLink = function() {
+            const link = document.getElementById('ref-link-display').innerText;
+            navigator.clipboard.writeText(link).then(() => showToast("Link Copied!"));
+        }
+
+        // Slider logic
         let curSlide = 0;
         window.moveSlide = function(d) {
             curSlide += d;
@@ -697,7 +616,6 @@
             track.style.transform = `translateX(-${curSlide * 100}%)`;
             document.querySelectorAll('.slide-item').forEach((s, i) => s.className = `slide-item ${i === curSlide ? 'active-slide' : ''}`);
         }
-
         function initSlider() {
             const track = document.getElementById('slider-track');
             leagues.forEach(l => {
@@ -711,8 +629,8 @@
             toast.innerText = msg; toast.style.opacity = '1';
             setTimeout(() => toast.style.opacity = '0', 3000);
         }
-
-        // Leaderboard Mock
+        
+        // Populate LB
         const lbList = document.getElementById('lb-list');
         [{n:'CryptoKing',s:'10M'},{n:'ElonFan',s:'9M'}].forEach((u,i) => {
             lbList.innerHTML += `<div class="list-item"><div style="color:#f3ba2f;font-weight:bold;width:30px">#${i+1}</div><div style="flex:1">${u.n}</div><div style="color:#aaa">${u.s}</div></div>`;
@@ -721,7 +639,7 @@
         // Event Listeners
         document.getElementById('coin').addEventListener('pointerdown', window.handleTap);
         
-        // Energy Regen
+        // ENERGY REGEN LOOP
         setInterval(() => {
             if(gameStarted && window.energy < energyMax && !isRocketActive) {
                 window.energy++;
